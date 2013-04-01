@@ -70,14 +70,22 @@
 #define CONFIG_NR_DRAM_BANKS		1
 #define PHYS_SDRAM_1			CONFIG_SYS_SDRAM_BASE
 #define PHYS_SDRAM_1_SIZE		0x40000000
-#if 0
+
 /* Nand config */
-#define CONFIG_NAND
+#ifdef CONFIG_NAND
+#define CONFIG_ENV_IS_IN_NAND
+#endif
+
 #define CONFIG_NAND_SUNXI
 #define CONFIG_CMD_NAND                         /* NAND support */
 #define CONFIG_SYS_MAX_NAND_DEVICE      1
 #define CONFIG_SYS_NAND_BASE            0x00
-#endif
+#define CONFIG_SYS_NAND_ONFI_DETECTION
+#define CONFIG_SUNXI_DMA
+#define CONFIG_SPL_NAND_SUPPORT
+#define CONFIG_SPL_NAND_MTD
+#define CONFIG_SPL_DMA_SUPPORT
+#define CONFIG_SYS_NAND_U_BOOT_OFFS     0x100000
 
 #define CONFIG_CMD_MEMORY
 #define CONFIG_CMD_SETEXPR

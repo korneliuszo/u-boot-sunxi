@@ -52,14 +52,21 @@ DECLARE_GLOBAL_DATA_PTR;
  */
 u32 spl_boot_device(void)
 {
+#ifdef CONFIG_NAND
+	return BOOT_DEVICE_NAND;
+#else
 	return BOOT_DEVICE_MMC1;
+#endif
 }
 
+#ifndef CONFIG_NAND
 /* No confiration data available in SPL yet. Hardcode bootmode */
 u32 spl_boot_mode(void)
 {
 	return MMCSD_MODE_RAW;
 }
+#endif
+
 #endif
 
 int gpio_init(void)
