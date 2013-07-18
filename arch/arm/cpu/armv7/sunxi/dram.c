@@ -678,6 +678,8 @@ int dramc_init(struct dram_para *para)
 	if (para->type == DRAM_MEMORY_TYPE_DDR3) {
 #if (defined(CONFIG_SUN5I) || defined(CONFIG_SUN7I))
 		reg_val = DRAM_MR_POWER_DOWN;
+#else
+		reg_val = 0;
 #endif
 		reg_val |= DRAM_MR_CAS_LAT(para->cas - 4);
 		reg_val |= DRAM_MR_WRITE_RECOVERY(0x5);
