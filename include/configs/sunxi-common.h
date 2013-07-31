@@ -74,8 +74,6 @@
 /* Nand config */
 #ifdef CONFIG_NAND
 #define CONFIG_ENV_IS_IN_NAND
-#endif
-
 #define CONFIG_NAND_SUNXI
 #define CONFIG_CMD_NAND                         /* NAND support */
 #define CONFIG_SYS_MAX_NAND_DEVICE      1
@@ -83,9 +81,26 @@
 #define CONFIG_SYS_NAND_ONFI_DETECTION
 #define CONFIG_SUNXI_DMA
 #define CONFIG_SPL_NAND_SUPPORT
+#define CONFIG_SPL_NAND_DRIVERS
 #define CONFIG_SPL_NAND_MTD
+#define CONFIG_MTD_PARTITIONS
+#define CONFIG_CMD_MTDPARTS
+#define CONFIG_CMD_UBI
+#define CONFIG_RBTREE
+#define CONFIG_MTD_DEVICE
 #define CONFIG_SPL_DMA_SUPPORT
 #define CONFIG_SYS_NAND_U_BOOT_OFFS     0x100000
+#endif
+
+#ifdef CONFIG_CUBIEBOARD2
+#define CONFIG_SYS_NAND_PAGE_SIZE    0x2000
+#define CONFIG_SYS_NAND_BLOCK_SIZE 0x100000
+#define CONFIG_SYS_NAND_OOBSIZE 640
+#define CONFIG_ENV_OFFSET        (0x100000) /* 1 block */
+#define CONFIG_ENV_OFFSET_REDUND (0x200000) /* 2 block */
+#define CONFIG_ENV_SIZE          (1 * 0x100000)	/* 1 block */
+#define CONFIG_ENV_SIZE_REDUND   (1 * 0x100000)
+#endif
 
 #define CONFIG_CMD_MEMORY
 #define CONFIG_CMD_SETEXPR
@@ -98,6 +113,7 @@
 /* mmc config */
 /* Can't use MMC slot 0 if the UART is directed there */
 #if !defined CONFIG_UART0_PORT_F || CONFIG_MMC_SUNXI_SLOT != 0
+#if !defined CONFIG_SPL_BUILD || !defined CONFIG_NAND
 #define CONFIG_MMC
 #define CONFIG_GENERIC_MMC
 #define CONFIG_CMD_MMC
@@ -106,8 +122,11 @@
 #define CONFIG_MMC_SUNXI_SLOT		0
 #endif
 #define CONFIG_MMC_SUNXI_USE_DMA
+#ifndef CONFIG_NAND
 #define CONFIG_ENV_IS_IN_MMC
+#endif
 #define CONFIG_SYS_MMC_ENV_DEV		CONFIG_MMC_SUNXI_SLOT
+#endif
 #endif
 
 /*
@@ -158,8 +177,10 @@
 #define CONFIG_SYS_MONITOR_LEN		(512 << 10)	/* 512 KiB */
 #define CONFIG_IDENT_STRING		" Allwinner Technology"
 
+#ifndef CONFIG_NAND
 #define CONFIG_ENV_OFFSET		(544 << 10) /* (8 + 24 + 512) KiB */
 #define CONFIG_ENV_SIZE			(128 << 10)	/* 128 KiB */
+#endif
 
 #ifdef CONFIG_SPL_FEL
 #define RUN_BOOT_RAM	"run boot_ram;"
@@ -282,7 +303,7 @@
 
 #define CONFIG_DOS_PARTITION
 #define CONFIG_CMD_FAT		/* with this we can access fat bootfs */
-#define CONFIG_FAT_WRITE	/* enable write access */
+#define CONFIG_FAT_WRITE
 #define CONFIG_CMD_EXT2		/* with this we can access ext2 bootfs */
 #define CONFIG_CMD_EXT4		/* with this we can access ext4 bootfs */
 #define CONFIG_CMD_ZFS		/* with this we can access ZFS bootfs */
@@ -310,7 +331,9 @@
 #define CONFIG_SPL_MAX_SIZE		0x6000		/* 24 KiB */
 
 #define CONFIG_SPL_LIBDISK_SUPPORT
+#if !defined CONFIG_SPL_BUILD || !defined CONFIG_NAND
 #define CONFIG_SPL_MMC_SUPPORT
+#endif
 
 #define CONFIG_SPL_LDSCRIPT "arch/arm/cpu/armv7/sunxi/u-boot-spl.lds"
 
